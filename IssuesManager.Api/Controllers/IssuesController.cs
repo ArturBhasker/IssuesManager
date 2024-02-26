@@ -23,7 +23,7 @@ namespace IssuesManager.Api.Controllers
         /// <summary>
         ///     Добавить/обновить задание.
         ///     Если id не указан, то добавляет новое задание,
-        ///     Если id указан то птывается обновить его по заданному id
+        ///     Если id указан то пытается обновить его по заданному id
         /// </summary>
         /// <param name="addOrUpdateIssue">Модель создания/обновления</param>
         [HttpPost]
@@ -32,10 +32,17 @@ namespace IssuesManager.Api.Controllers
             [FromForm] AddOrUpdateIssueDto addOrUpdateIssue,
             CancellationToken cancellationToken)
         {
-            var result = await _issueService
-                 .AddOrUpdateIssueAsync(addOrUpdateIssue, cancellationToken);
+            try
+            {
+                var result = await _issueService
+                     .AddOrUpdateIssueAsync(addOrUpdateIssue, cancellationToken);
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         
@@ -54,15 +61,22 @@ namespace IssuesManager.Api.Controllers
             [FromQuery] int pageSize,
             CancellationToken cancellationToken)
         {
-            var result = await _issueService
-                .GetPageAsync(filter, page, pageSize, cancellationToken);
+            try
+            {
+                var result = await _issueService
+                    .GetPageAsync(filter, page, pageSize, cancellationToken);
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch(Exception ex)
+            {
+                   return BadRequest(ex.Message);
+            }
         }
 
         /// <summary>
         ///     Удалить задание по фильтру. Рекомендуется удалять по Id.
-        ///     Можно также удалить задания с определённым статусом
+        ///     Можно также удалить задания с определённым статусом.
         /// </summary>
         /// <param name="filter">Фильтр</param>
         /// <param name="cancellationToken">Токен отмены</param>
@@ -72,14 +86,21 @@ namespace IssuesManager.Api.Controllers
             IssueFilterDto filter,
             CancellationToken cancellationToken)
         {
-           await _issueService
-                .DeleteAsync(filter, cancellationToken);
+            try
+            {
+                await _issueService
+                     .DeleteAsync(filter, cancellationToken);
 
-            return Ok();
+                return Ok();
+            }
+            catch(Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
 
         /// <summary>
-        ///     Скачать фал по Id из хранилища
+        ///     Скачать файл по Id из хранилища
         /// </summary>
         /// <param name="storageId">Id из хранилища</param>
         /// <param name="cancellationToken">Токен отмены</param>
@@ -89,13 +110,20 @@ namespace IssuesManager.Api.Controllers
             string storageId,
             CancellationToken cancellationToken)
         {
-            var result = await _issueService
-                .GetFileAsync(storageId, cancellationToken);
+            try
+            {
+                var result = await _issueService
+                    .GetFileAsync(storageId, cancellationToken);
 
-            if (result is null)
-                return NotFound($"Файл с Id {storageId} не найден");
+                if (result is null)
+                    return NotFound($"Файл с Id {storageId} не найден");
 
-            return File(result.FileStream, OctetStream, result.Name);
+                return File(result.FileStream, OctetStream, result.Name);
+            }
+            catch (Exception exception)
+            {
+                return BadRequest(exception.Message);
+            }
         }
     }
 }
