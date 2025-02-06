@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>IssuesManager.Domain</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.18.1"/>
+        <PackageReference Include="AutoMapper" Version="13.0.1"/>
+        <PackageReference Include="AWSSDK.S3" Version="3.7.413.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\IssuesManager.Contracts\IssuesManager.Contracts.csproj"/>
+        <ProjectReference Include="..\IssuesManager.DataAccess\IssuesManager.DataAccess.csproj"/>
+    </ItemGroup>
+
+</Project>
